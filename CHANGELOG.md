@@ -3,9 +3,13 @@ Samtools/ CHANGELOG
 
 This file is used to list changes made in each version of the Samtools/ cookbook.
 
-0.1.0
+1.0.0
 -----
-- [your_name] - Initial release of Samtools/
+- [Daniel Barrell] - Initial release of Samtools/
+
+1.0.1
+-----
+- [Daniel Barrell] - Clean up
 
 - - -
 Check the [Markdown Syntax Guide](http://daringfireball.net/projects/markdown/syntax) for help with Markdown.
