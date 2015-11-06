@@ -5,6 +5,13 @@
 # Copyright (c) 2015 Eagle Genomics, All Rights Reserved.
 
 ##########################################################
+# package install
+
+package ['zlib-devel', 'tar', 'make', 'bzip2'] do
+  action :install
+end
+
+##########################################################
 
 # here for use by serverspec
 magic_shell_environment 'Samtools_DIR' do
