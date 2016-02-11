@@ -13,45 +13,36 @@ end
 include_recipe 'build-essential'
 
 # here for use by serverspec
-magic_shell_environment 'Samtools_DIR' do
-  value node['Samtools']['dir']
-end
-
 magic_shell_environment 'Samtools_VERSION' do
   value node['Samtools']['version']
 end
 
-magic_shell_environment 'Samtools_INSTALL' do
-  value node['Samtools']['install']
+samtools_dir = node['Samtools']['install_path'] + '/' + 'samtools-' + node['Samtools']['version']
+samtools_filename = "samtools-#{node['Samtools']['version']}.tar.bz2"
+samtools_url = "http://sourceforge.net/projects/samtools/files/samtools/#{node['Samtools']['version']}/#{samtools_filename}"
+
+magic_shell_environment 'Samtools_DIR' do
+  value samtools_dir
 end
 
-remote_file "#{Chef::Config[:file_cache_path]}/#{node['Samtools']['filename']}" do
-  source node['Samtools']['url']
+remote_file "#{Chef::Config[:file_cache_path]}/#{samtools_filename}" do
+  source samtools_url
   action :create_if_missing
 end
 
 execute 'un-tar Samtools tar ball' do
-  command "tar jxvf #{Chef::Config[:file_cache_path]}/#{node['Samtools']['filename']} -C #{node['Samtools']['install_path']}"
-  not_if { ::File.exist?("#{node['Samtools']['dir']}/README") }
+  command "tar jxvf #{Chef::Config[:file_cache_path]}/#{samtools_filename} -C #{node['Samtools']['install_path']}"
+  not_if { ::File.exist?("#{samtools_dir}/README") }
 end
 
-execute 'Samtools make' do
+execute 'make Samtools' do
   command 'make'
-  cwd node['Samtools']['dir']
-  not_if { ::File.exist?("#{node['Samtools']['dir']}/src/samtools") }
+  cwd samtools_dir
+  not_if { ::File.exist?("#{samtools_dir}/samtools") }
 end
 
-execute 'Samtools make install' do
-  command 'make install'
-  cwd node['Samtools']['dir']
-  not_if { ::File.exist?("#{node['Samtools']['install_dir']}/bin/samtools") }
-end
-
-# this symlinks every executable in the install subdirectory to the top of the directory tree
+# this symlinks every executable in the install subdirectory to /usr/local/bin
 # so that they are in the PATH
-execute "find #{node['Samtools']['dir']} -maxdepth 1 -name 'sam*' -executable -type f -exec ln -s {} . \\;" do
-  cwd node['Samtools']['install']
+execute "find #{samtools_dir} -maxdepth 2 -executable -type f -exec ln -s {} /usr/local/bin \\;" do
+  cwd node['Samtools']['install_path']
 end
-
-##########################################################
-##########################################################

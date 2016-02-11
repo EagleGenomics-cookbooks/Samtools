@@ -5,7 +5,8 @@ driver:
 
 provisioner:
   name: chef_zero
-
+  data_path: test/shared
+  
 platforms:
   - name: centos-6.6
 
@@ -13,4 +14,9 @@ suites:
   - name: default
     run_list:
       - recipe[Samtools]
+  - name: BioDBSamVersion
+    run_list:
+      - recipe[Samtools]
     attributes:
+      Samtools:
+        version: '0.1.17'
