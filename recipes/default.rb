@@ -47,10 +47,6 @@ execute 'Samtools make install' do
   not_if { ::File.exist?("#{node['Samtools']['install_dir']}/bin/samtools") }
 end
 
-execute 'make' do
-  cwd node['Samtools']['dir']
-end
-
 # this symlinks every executable in the install subdirectory to the top of the directory tree
 # so that they are in the PATH
 execute "find #{node['Samtools']['dir']} -maxdepth 1 -name 'sam*' -executable -type f -exec ln -s {} . \\;" do
