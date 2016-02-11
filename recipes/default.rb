@@ -12,18 +12,9 @@ end
 
 include_recipe 'build-essential'
 
-# here for use by serverspec
-magic_shell_environment 'Samtools_VERSION' do
-  value node['Samtools']['version']
-end
-
 samtools_dir = node['Samtools']['install_path'] + '/' + 'samtools-' + node['Samtools']['version']
 samtools_filename = "samtools-#{node['Samtools']['version']}.tar.bz2"
 samtools_url = "http://sourceforge.net/projects/samtools/files/samtools/#{node['Samtools']['version']}/#{samtools_filename}"
-
-magic_shell_environment 'Samtools_DIR' do
-  value samtools_dir
-end
 
 remote_file "#{Chef::Config[:file_cache_path]}/#{samtools_filename}" do
   source samtools_url
@@ -36,7 +27,7 @@ execute 'un-tar Samtools tar ball' do
 end
 
 execute 'make Samtools' do
-  command 'make'
+  command 'make ' + node['Samtools']['make_options']
   cwd samtools_dir
   not_if { ::File.exist?("#{samtools_dir}/samtools") }
 end
@@ -45,4 +36,17 @@ end
 # so that they are in the PATH
 execute "find #{samtools_dir} -maxdepth 2 -executable -type f -exec ln -s {} /usr/local/bin \\;" do
   cwd node['Samtools']['install_path']
+end
+
+magic_shell_environment 'Samtools_VERSION' do
+  value node['Samtools']['version']
+end
+
+magic_shell_environment 'Samtools_DIR' do
+  value samtools_dir
+end
+
+# This is needed for Bio::DB:Sam
+magic_shell_environment 'SAMTOOLS' do
+  value samtools_dir
 end

@@ -20,3 +20,4 @@ suites:
     attributes:
       Samtools:
         version: '0.1.17'
+        make_options: "CFLAGS='-g -Wall -O2 -m64 -fPIC'"
