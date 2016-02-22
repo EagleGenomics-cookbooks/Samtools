@@ -13,7 +13,7 @@ describe file(file_path) do
   it { should be_executable }
 end
 
-# The early version of 0.1.17 has version in the stderr, where recent version
+# The early version of 0.1.17 has version in the stderr, where recent versions
 # use --version to stdout
 if ENV['Samtools_VERSION'] == '0.1.17'
   describe command(". /etc/profile; #{file_path}") do
