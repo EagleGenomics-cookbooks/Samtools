@@ -6,7 +6,17 @@
 
 ##########################################################
 
-package ['ncurses-devel', 'zlib-devel', 'tar', 'bzip2'] do
+if node['platform_family'] == 'debian'
+  package ['zlib1g-dev', 'libncurses5-dev'] do
+    action :install
+  end
+elsif node['platform_family'] == 'rhel'
+  package ['zlib-devel', 'ncurses-devel'] do
+    action :install
+  end
+end
+
+package %w(tar bzip2) do
   action :install
 end
 
