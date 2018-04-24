@@ -1,23 +1,19 @@
----
 driver:
   name: docker
   use_sudo: false
-
 provisioner:
   name: chef_zero
   data_path: test/shared
-  
 platforms:
-  - name: centos-6.6
-
+- name: centos-6.6
 suites:
-  - name: default
-    run_list:
-      - recipe[Samtools]
-  - name: BioDBSamVersion
-    run_list:
-      - recipe[Samtools]
-    attributes:
-      Samtools:
-        version: '0.1.17'
-        make_options: "CFLAGS='-g -Wall -O2 -m64 -fPIC'"
+- name: default
+  run_list:
+  - recipe[Samtools]
+- name: BioDBSamVersion
+  run_list:
+  - recipe[Samtools]
+  attributes:
+    Samtools:
+      version: 0.1.17
+      make_options: CFLAGS='-g -Wall -O2 -m64 -fPIC'
